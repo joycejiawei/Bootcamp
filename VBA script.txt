@@ -1,0 +1,54 @@
+﻿Sub MultiYearStock()
+
+Dim ws As Worksheet
+For Each ws In Worksheets
+
+ws.Cells(1, 9).Value = "Ticker"
+ws.Cells(1, 10).Value = "Yearly Change"
+ws.Cells(1, 11).Value = "Percent Change"
+ws.Cells(1, 12).Value = "Total Stock Volume"
+
+
+Dim Ticker As String
+Dim Total As Double
+Dim lRow As Long
+Dim SummaryRow As Integer
+Dim YearlyChange As Double
+Dim PercenChange As Double
+SummaryRow = 2
+
+lRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+For i = 2 To lRow
+
+  If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+     Ticker = ws.Cells(i, 1).Value
+     Total = Total + ws.Cells(i, 7).Value
+     YearlyChange = ws.Cells(i, 6).Value - ws.Cells(i, 3).Value
+     PercentChange = YearlyChange / ws.Cells(i, 3).Value
+     
+     ws.Range("i" & SummaryRow).Value = Ticker
+     ws.Range("j" & SummaryRow).Value = YearlyChange
+     ws.Range("K" & SummaryRow).Value = PercentChange
+     ws.Range("K" & SummaryRow).NumberFormat = "##.##%"
+     ws.Range("l" & SummaryRow).Value = Total
+     
+     SummaryRow = SummaryRow + 1
+     Total = 0
+     
+     If ws.Range("j" & SummaryRow).Value > 0 Then
+     ws.Range("j" & SummaryRow).Interior.ColorIndex = 4
+     ElseIf ws.Range("j" & SummaryRow).Value < 0 Then
+     ws.Range("j" & SummaryRow).Interior.ColorIndex = 3
+     End If
+     
+  Else
+     Total = Total + Cells(i, 7).Value
+  End If
+  
+  Next i
+
+  
+Next ws
+
+End Sub
+
